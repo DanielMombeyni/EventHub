@@ -8,7 +8,8 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
-from events.utils.image_path import image_file_path
+
+from events.utils import image_file_path, generate_id
 
 
 class UserManager(BaseUserManager):
@@ -37,6 +38,9 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     """implementation User for the system."""
 
+    id = models.CharField(
+        primary_key=True, default=generate_id, unique=True, editable=False
+    )
     image = models.ImageField(null=True, upload_to=image_file_path)
     email = models.EmailField(max_length=255, unique=True)
     user_name = models.CharField(max_length=255, unique=True)
