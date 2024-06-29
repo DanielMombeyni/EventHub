@@ -5,8 +5,8 @@ services:
     build:
       context: ./Backend
       dockerfile: Dockerfile
-    args:
-      - DEV=true
+      args:
+        - DEV=true
     volumes:
       - ./BackEnd:/app
     ports:
