@@ -12,7 +12,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Check Out
         uses: actions/checkout@v3
+
+      - name: Print Directory Structure
+        run: ls -R
+
+      - name: Build Docker Images
+        run: docker-compose build
+
+      - name: Wait for DataBase to be available
+        run: docker-compose run --rm backend python manage.py wait_for_db
+
       - name: Run BackEnd Test
         run: docker-compose run --rm backend python manage.py test
