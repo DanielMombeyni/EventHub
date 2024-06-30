@@ -8,6 +8,8 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from events.utils import image_file_path, generate_id
 
@@ -35,12 +37,10 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     """implementation User for the system."""
 
-    id = models.CharField(
-        primary_key=True, default=generate_id, unique=True, editable=False
-    )
+    id = models.CharField(primary_key=True, unique=True, editable=False)
     image = models.ImageField(null=True, upload_to=image_file_path)
     email = models.EmailField(max_length=255, unique=True)
     user_name = models.CharField(max_length=255, unique=True)
@@ -56,3 +56,8 @@ class User(AbstractBaseUser):
 
     def __str__(self) -> str:
         return self.title
+
+
+@receiver(pre_save, sender=User)
+def set_default_id(sender, instance, **kwargs):
+    instance.id = generate_id(instance)
