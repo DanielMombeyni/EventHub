@@ -1,4 +1,4 @@
-name: Check
+name: Checks
 
 on: [push]
 
@@ -14,9 +14,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Check Out
         uses: actions/checkout@v3
-      - name: Check Docker Compose version
-        run: docker-compose --version
-      - name: Wait for DataBase to be available
-        run: docker-compose run --rm backend python manage.py wait_for_db
       - name: Run BackEnd Test
         run: docker-compose run --rm backend python manage.py test
